@@ -307,6 +307,9 @@
         <mxCell id="tSDlvJCKTFInjBsE9mPS-0" value="Első generálás:&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Katasztrófák&lt;/div&gt;&lt;div&gt;- mezőgazdászati események&lt;/div&gt;&lt;div&gt;- közlekedés események&lt;/div&gt;&lt;div&gt;- régiók&lt;/div&gt;&lt;div&gt;- szélfajták&lt;/div&gt;&lt;div&gt;-típusok&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="-300" y="170" width="60" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="tSDlvJCKTFInjBsE9mPS-1" value="Nap típusa" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="-210" y="140" width="60" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
