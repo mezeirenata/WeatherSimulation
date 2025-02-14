@@ -14,9 +14,16 @@ namespace Weather_Simulation
         "Átlépés a következő napra"
 
         };
+
+        static List<Regio> Regiok = new List<Regio>();
         static void Main(string[] args)
         {
             DateTime dateofDay = DateTime.Now;
+            ElsoGeneralas(dateofDay);
+            ///SzelLetrehozas(dateofDay); 
+            ///Létrehozza az összes szelet, feltölti a régiók szeles listájába
+            ///A szélből lehet randomizálni dátum szerint, szélrandomizálás -> megkapja a dátumot, esélyeket generál
+            ///
             int choice = 1;
             while (choice > 0)
             {
@@ -25,16 +32,38 @@ namespace Weather_Simulation
                 {
                     case -1: break;
                     case 0: break;
-                    case 1: //// régiók kilistázása
+                    case 1:
+                        Console.Clear();
+                        /// régió kilistázás
+                        Console.ReadLine();
+                        break;
                     case 2:  break;
                     case 4:
                         dateofDay = dateofDay.AddDays(1);
+                        Generalas(dateofDay);
                         break;
 
                 }
 
             }
         }
+
+        static void ElsoGeneralas(DateTime dateofDay)
+        {
+            Regio regio = new Regio("Észak-Magyarország", dateofDay);
+            /// letrehozza
+            /// feltolti listaba
+        }
+
+        static void Generalas()
+        {
+
+            /// vegigmegy a listakon
+            /// elsosorban meghivja a napvaltas() függvényt, 1 nappal megemeli a dátumot
+            /// esetlegesen új évszak, új esélyek
+            /// ugyanugy legeneral mindent
+        }
+
 
         static int Menü(string[] menu, DateTime dateofDay)
         {
@@ -52,15 +81,15 @@ namespace Weather_Simulation
                     if (Current == i)
                     {    
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine($" ││    {menu[i]}");
-                        Console.SetCursorPosition(30,i+2);
+                        Console.WriteLine($" ││    {menu[i]} ");
+                        Console.SetCursorPosition(35,i+2);
                         Console.WriteLine($"   ││");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {
                         Console.WriteLine($" ││    {menu[i]}");
-                        Console.SetCursorPosition(30, i + 2);
+                        Console.SetCursorPosition(35, i + 2);
                         Console.WriteLine($"   ││");
                     }
                 }
