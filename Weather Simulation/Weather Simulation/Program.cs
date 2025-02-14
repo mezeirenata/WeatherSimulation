@@ -28,19 +28,37 @@ namespace Weather_Simulation
             while (choice > 0)
             {
                 choice = Menü(menu, dateofDay);
-                switch (choice)
-                {
-                    case -1: break;
-                    case 0: break;
-                    case 1:
+                switch (choice) { 
+                /// !!!!!!! Try block
+                    default:
                         Console.Clear();
+           
+                        break;
+                    case 1: /// mai nap jelentése
+                        Console.Clear();
+                        Header(dateofDay);
+                        for (int i = 0; i < Regiok.Count; i++)
+                        {
+                            Console.WriteLine($"{Regiok[i].nev}");
+                        }
                         /// régió kilistázás
                         Console.ReadLine();
                         break;
-                    case 2:  break;
+                    case 2: /// Közlekedés ugyanaz mint mezőg.
+                        Console.Clear();
+                        Header(dateofDay);
+                        /// régió kilistázás
+                        Console.ReadLine();
+                        break;
+                    case 3: /// Mezőgazdaság
+                        Console.Clear();
+                        Header(dateofDay);
+                        /// régió kilistázás NEM kell -> nem történik olyan sok esemény, viszont helyszínt kiírni
+                        Console.ReadLine();
+                        break;
                     case 4:
                         dateofDay = dateofDay.AddDays(1);
-                        Generalas(dateofDay);
+                        //Generalas(dateofDay);
                         break;
 
                 }
@@ -50,7 +68,29 @@ namespace Weather_Simulation
 
         static void ElsoGeneralas(DateTime dateofDay)
         {
+            try
+            {
             Regio regio = new Regio("Észak-Magyarország", dateofDay);
+            Regiok.Add(regio);
+            regio = new Regio("Észak-Alföld", dateofDay);
+            Regiok.Add(regio);
+            regio = new Regio("Dél-Alföld", dateofDay);
+            Regiok.Add(regio);
+            regio = new Regio("Pest", dateofDay);
+            Regiok.Add(regio);
+            regio = new Regio("Budapest", dateofDay);
+            Regiok.Add(regio);
+            regio = new Regio("Közép-Dunántúl", dateofDay);
+            Regiok.Add(regio);
+            regio = new Regio("Nyugat-Dunántúl", dateofDay);
+            Regiok.Add(regio);
+            regio = new Regio("Dél-Dunántúl", dateofDay);
+            Regiok.Add(regio);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             /// letrehozza
             /// feltolti listaba
         }
@@ -58,13 +98,29 @@ namespace Weather_Simulation
         static void Generalas()
         {
 
-            /// vegigmegy a listakon
-            /// elsosorban meghivja a napvaltas() függvényt, 1 nappal megemeli a dátumot
+            /// vegigmegy a listakon (régió)
+            /// elsosorban meghivja a napvaltas() függvényt, 1 nappal megemeli a dátumot  régió
+            /// 
             /// esetlegesen új évszak, új esélyek
             /// ugyanugy legeneral mindent
         }
 
+        static void Header(DateTime dateofDay)
+        {
 
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($" Menü | {dateofDay}  | Időjárás jelentés ");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+        }
+
+
+        static int RegioMenu(string[] Regiok, DateTime dateofDay)
+        { 
+            return 0;
+        }
         static int Menü(string[] menu, DateTime dateofDay)
         {
             int Current = 0;
@@ -73,7 +129,11 @@ namespace Weather_Simulation
             {
                 Console.Clear();
 
-                Console.WriteLine($" Menü ||{dateofDay} || Időjárás jelentés ");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($" Menü | {dateofDay}  | Időjárás jelentés ");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine();
                 for (int i = 0; i < menu.Length; i++)
                 {

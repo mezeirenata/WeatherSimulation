@@ -12,7 +12,9 @@ namespace Weather_Simulation
         public string nev { get; private set; }
         public DateTime datum { get; private set; }
         private int honap = 0;
-        private List<szel> LehetsegesSzelTipusok { get; set; } = new List<szel>();
+        
+        public Szel szel { get; private set; }
+
         private List<string> LehetsegesNevek = new List<string>() {
             "Észak-Magyarország", 
             "Észak-Alföld",
@@ -29,26 +31,22 @@ namespace Weather_Simulation
         public Regio(string Nev, DateTime Datum)
         {
             nev = Nev;
-            if (LehetsegesNevek.Contains(nev))
+            int talalt = 0;
+            for (int i = 0; i < LehetsegesNevek.Count; i++)
             {
-                nev = Nev;
+                if (LehetsegesNevek[i].ToLower() == Nev.ToLower())
+                {
+                    talalt = 1;
+                }
             }
-            else
+            if (talalt == 0)
             {
-                throw new Exception($"Nem lehetséges régió név!");
-
+                throw new Exception("Nem lehetséges régiónév!");
             }
             honap = Datum.Month;
             Evszakmentes();
 
-
-        }
-
-
-
-        public void SzeltipusokFelvetele(szel Szél)
-        {
-            LehetsegesSzelTipusok.Add(Szél);
+            szel = new Szel();
 
         }
 
@@ -77,6 +75,8 @@ namespace Weather_Simulation
         {
             datum.AddDays(1);
             honap = datum.Month;
+
+            szel = new Szel();
         }
     }
 }
