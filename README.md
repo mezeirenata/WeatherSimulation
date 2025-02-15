@@ -1,7 +1,7 @@
-## Időjárás szimuláció
+# Időjárás szimuláció
   A program célja, hogy a napi időjárásjelentést megfelelően mutassa be, különböző funkciók kereteiben.  
 
-### Menü
+## Menü
   - Kilépés
   - mai nap statisztikái
   - Mezgőgazdaság - események
@@ -9,7 +9,7 @@
   - Átlépés a következő napra
   - Beállítások
 
-### Osztályok
+## Osztályok
   ### Főosztály (Régió)
   -  név
   -  időjárás
