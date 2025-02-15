@@ -8,18 +8,21 @@ namespace Weather_Simulation
     {
         static string[] menu = new string[] {
         "Kilépés",
-        "Napi időjárás jelentés", /// -> régiók kilistázása -> választási lehetőség
-        "Közlekedés - események",
-        "Mezőgazdaság - események",
-        "Átlépés a következő napra"
-
+        "Napi időjárás jelentés", /// -> régiók kilistázása -> választási lehetőség + Vissza (enter)
+        "Közlekedés - események", /// Vissza
+        "Mezőgazdaság - események",/// Vissza
+        "Átlépés a következő napra",
+        "Beállítások" /// ->> katasztrófa esemény felvétele
+                      /// mezőgazdasági esemény felvétele   legvalószínűbb hónap, esélyek, milyen időjárási tényezőktől
+                      /// közlekedés esemény felvétele -,,-
+                      /// Vissza
         };
 
         static List<Regio> Regiok = new List<Regio>();
         static void Main(string[] args)
         {
             DateTime dateofDay = DateTime.Now;
-            ElsoGeneralas(dateofDay);
+            Regiogeneralas(dateofDay);
             ///SzelLetrehozas(dateofDay); 
             ///Létrehozza az összes szelet, feltölti a régiók szeles listájába
             ///A szélből lehet randomizálni dátum szerint, szélrandomizálás -> megkapja a dátumot, esélyeket generál
@@ -32,17 +35,38 @@ namespace Weather_Simulation
                 /// !!!!!!! Try block
                     default:
                         Console.Clear();
-           
                         break;
                     case 1: /// mai nap jelentése
                         Console.Clear();
                         Header(dateofDay);
-                        for (int i = 0; i < Regiok.Count; i++)
+                        //for (int i = 0; i < Regiok.Count; i++)
+                        //{
+                        //    Console.WriteLine($"{Regiok[i].nev}");
+                        //}
+                        int regiochoice = 1;
+                        while (regiochoice > -1)
                         {
-                            Console.WriteLine($"{Regiok[i].nev}");
+                            regiochoice = RegioMenu(Regiok, dateofDay);
+                            if (regiochoice < 0)
+                            {
+                                choice = -1;
+                                break;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    RegioKiir(regiochoice, dateofDay);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e.Message);
+                                    Console.ReadLine();
+                                }
+                                break;
+                            }
                         }
-                        /// régió kilistázás
-                        Console.ReadLine();
+ 
                         break;
                     case 2: /// Közlekedés ugyanaz mint mezőg.
                         Console.Clear();
@@ -60,42 +84,47 @@ namespace Weather_Simulation
                         dateofDay = dateofDay.AddDays(1);
                         //Generalas(dateofDay);
                         break;
-
+                    case 5:
+                        Header(dateofDay);
+                        Console.ReadLine();
+                        break;
                 }
 
             }
         }
 
-        static void ElsoGeneralas(DateTime dateofDay)
+
+        static void Regiogeneralas(DateTime dateofDay)
         {
             try
             {
-            Regio regio = new Regio("Észak-Magyarország", dateofDay);
-            Regiok.Add(regio);
-            regio = new Regio("Észak-Alföld", dateofDay);
-            Regiok.Add(regio);
-            regio = new Regio("Dél-Alföld", dateofDay);
-            Regiok.Add(regio);
-            regio = new Regio("Pest", dateofDay);
-            Regiok.Add(regio);
-            regio = new Regio("Budapest", dateofDay);
-            Regiok.Add(regio);
-            regio = new Regio("Közép-Dunántúl", dateofDay);
-            Regiok.Add(regio);
-            regio = new Regio("Nyugat-Dunántúl", dateofDay);
-            Regiok.Add(regio);
-            regio = new Regio("Dél-Dunántúl", dateofDay);
-            Regiok.Add(regio);
+                Random random = new Random();
+                int mostLikely = random.Next(0,7);
+                int mostLikely2 = random.Next(0, 99);
+                Regio regio = new Regio("Észak-Magyarország", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
+                regio = new Regio("Észak-Alföld", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
+                regio = new Regio("Dél-Alföld", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
+                regio = new Regio("Pest", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
+                regio = new Regio("Budapest", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
+                regio = new Regio("Közép-Dunántúl", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
+                regio = new Regio("Nyugat-Dunántúl", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
+                regio = new Regio("Dél-Dunántúl", dateofDay, mostLikely, mostLikely2);
+                Regiok.Add(regio);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
-            /// letrehozza
-            /// feltolti listaba
         }
-
-        static void Generalas()
+      
+        static void Generalas(DateTime dateofDay)
         {
 
             /// vegigmegy a listakon (régió)
@@ -103,11 +132,34 @@ namespace Weather_Simulation
             /// 
             /// esetlegesen új évszak, új esélyek
             /// ugyanugy legeneral mindent
+            /// /// regio.UjlegvaloszinubbSzelirany(randomizaltszam);
         }
+
+        static void RegioKiir(int regiochoice,DateTime dateofDay)
+        {
+            if (regiochoice == Regiok.Count)
+            {
+                return;
+            }
+            if (regiochoice > Regiok.Count || regiochoice < 0) {
+                throw new Exception("Nem létezik ilyen régió.");
+            }
+            else
+            {
+            Regio regio = Regiok[regiochoice];
+
+                Console.Clear();
+                Header(dateofDay);
+                Console.WriteLine(regio);
+                Console.ReadLine();
+                return;
+            }
+        }
+
 
         static void Header(DateTime dateofDay)
         {
-
+            Console.Clear();
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($" Menü | {dateofDay}  | Időjárás jelentés ");
@@ -117,10 +169,82 @@ namespace Weather_Simulation
         }
 
 
-        static int RegioMenu(string[] Regiok, DateTime dateofDay)
-        { 
-            return 0;
+        static int RegioMenu(List<Regio> menu, DateTime dateofDay)
+        {
+            int Current = 0;
+            ConsoleKey k;
+            do
+            {
+                Console.Clear();
+                Header(dateofDay);
+                for (int i = 0; i < menu.Count+1; i++)
+                {
+                    if (Current == i)
+                    { 
+                        if (i == menu.Count)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine($" -    Vissza ");
+                            Console.SetCursorPosition(35, i + 2);
+                            Console.WriteLine("");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else
+                        {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine($" -    {menu[i].nev} ");
+                        Console.SetCursorPosition(35, i + 2);
+                        Console.WriteLine("");
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        }
+                    }
+                    else
+                    {
+                        if (i == menu.Count)
+                        {
+                        
+                            Console.WriteLine($" -    Vissza ");
+                            Console.SetCursorPosition(35, i + 2);
+                            Console.WriteLine("");
+                        }
+                        else
+                        {
+                        Console.WriteLine($" -    {menu[i].nev}");
+                        Console.SetCursorPosition(35, i + 2);
+                        Console.WriteLine("");
+
+                        }
+                    }
+                }
+                k = Console.ReadKey(true).Key;
+                if (k == ConsoleKey.UpArrow)
+                {
+                    Current--;
+                    if (Current < 0)
+                    {
+                        Current = menu.Count;
+                    }
+                }
+                else if (k == ConsoleKey.DownArrow)
+                {
+                    Current++;
+                    if (Current == menu.Count + 1)
+                    {
+                        Current = 0;
+                    }
+                }
+
+            } while (k != ConsoleKey.Enter && k != ConsoleKey.Escape);
+
+            if (k == ConsoleKey.Escape)
+            {
+                Current = -1;
+            }
+
+            return Current;
         }
+        
         static int Menü(string[] menu, DateTime dateofDay)
         {
             int Current = 0;
@@ -128,13 +252,7 @@ namespace Weather_Simulation
             do
             {
                 Console.Clear();
-
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($" Menü | {dateofDay}  | Időjárás jelentés ");
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine();
+                Header(dateofDay);
                 for (int i = 0; i < menu.Length; i++)
                 {
                     

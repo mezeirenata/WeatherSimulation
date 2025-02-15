@@ -15,6 +15,10 @@ namespace Weather_Simulation
         
         public Szel szel { get; private set; }
 
+        private int legvaloszinubbSzam2 { get; set; }
+        private int legvaloszinubbSzam { get; set; }
+
+
         private List<string> LehetsegesNevek = new List<string>() {
             "Észak-Magyarország", 
             "Észak-Alföld",
@@ -28,7 +32,7 @@ namespace Weather_Simulation
         
 
 
-        public Regio(string Nev, DateTime Datum)
+        public Regio(string Nev, DateTime Datum, int mostLikelySzelIndex, int mostLikelySzam2)
         {
             nev = Nev;
             int talalt = 0;
@@ -45,8 +49,10 @@ namespace Weather_Simulation
             }
             honap = Datum.Month;
             Evszakmentes();
+            legvaloszinubbSzam = mostLikelySzelIndex;
+            legvaloszinubbSzam2 = mostLikelySzam2;
+            szel = new Szel(legvaloszinubbSzam,legvaloszinubbSzam2);
 
-            szel = new Szel();
 
         }
 
@@ -71,12 +77,42 @@ namespace Weather_Simulation
             }
         }
         
+        public void UjLegvaloszinubbSzelirany(int szam)
+        {
+            if (szel.Szeliranyok.Count - 1 < szam || szam > -1)
+            {
+                throw new Exception("Nem található szélirány a listában!");
+            }
+            else
+            {
+                legvaloszinubbSzam = szam;
+
+            }
+        }
+        public void UjLegvaloszinubbSzam2(int szam)
+        {
+            if (0 < szam || szam > 99)
+            {
+                throw new Exception("Maximum 0 és 99 között generálható véletlenszerű szám!");
+            }
+            else
+            {
+                legvaloszinubbSzam2 = szam;
+
+            }
+        }
+
         public void napvaltas()
         {
             datum.AddDays(1);
             honap = datum.Month;
 
-            szel = new Szel();
+            szel = new Szel(legvaloszinubbSzam, legvaloszinubbSzam2);
+        }
+
+        public override string ToString()
+        {
+            return $" ││    Régió - {this.nev}   ││\n\n       Szél : {this.szel}";
         }
     }
 }

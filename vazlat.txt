@@ -1,0 +1,14 @@
+Elsőgenerálás: előregenerál régiókat
+
+széllel együtt
+
+Random szám -> átadom a régiónak minden generálásnál
+
+közeli helyeknek is ugyanazon számot
+
+
+A régió megkapja a random számot
+a random számot átadja a szélnek példányosításkor
+a szél a random számnak megfelelő szélirányt választja
+
+DE van minimális esély, hogy az eltérő legyen (szél konstruktoron belül)

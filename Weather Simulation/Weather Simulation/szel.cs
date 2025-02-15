@@ -11,7 +11,9 @@ namespace Weather_Simulation
         public string szelirany { get; private set; }
 
         public double szelsebesseg { get; private set; }
-        private List<string> Szeliranyok { get; set; } = new List<string>()
+        private int legvaloszinubbSzam { get; set; }
+        private int legvaloszinubbSzam2 { get; set; }
+        public List<string> Szeliranyok { get;private set; } = new List<string>()
         {
             "Nyugati",
             "Északnyugati",
@@ -22,28 +24,29 @@ namespace Weather_Simulation
             "Déli",
             "Délnyugati"
         };
-            /// szögekben > int , max 360
-
-        /// Szélirány megint random
         
 
-        public Szel()
+        public Szel(int legvaloszinubbszam, int legvaloszinubbszam2)
         {
-            szelirany = randomSzelirany();
+            szelirany = SzeliranyBeallitasa();
+            legvaloszinubbSzam = legvaloszinubbszam;
+            legvaloszinubbSzam2 = legvaloszinubbszam2;
             szelsebesseg = randomSebesseg();
         }
 
-        private string randomSzelirany()
+        private string SzeliranyBeallitasa()
         {
-            Random random = new Random();
-            int szam = random.Next(0, Szeliranyok.Count);
-            for (int i = 0; i < Szeliranyok.Count; i++)
-            {
-                if (szam == i)
-                {
-                    szelirany = Szeliranyok[i];
-                }
 
+            Random random = new Random();
+            int szam = random.Next(0, 5); /// 5 db szám 0-4
+            if (szam < 4)
+            {
+                szelirany = Szeliranyok[legvaloszinubbSzam];
+            }
+            else
+            {
+                int randomirany = random.Next(0, Szeliranyok.Count);
+                szelirany = Szeliranyok[randomirany];
             }
             return szelirany;
              
@@ -52,9 +55,40 @@ namespace Weather_Simulation
         private double randomSebesseg()
         {
             Random random = new Random();
-            int szelsebesseg = random.Next(50,280);
+
+            if (legvaloszinubbSzam2 == 0)
+            {
+                szelsebesseg = random.Next(700, 1100);
+
+            }
+            else if(legvaloszinubbSzam2 < 11 && legvaloszinubbSzam2 > 0)
+            {
+                szelsebesseg = random.Next(400, 600); 
+            }
+            else if (   legvaloszinubbSzam2 > 10 && legvaloszinubbSzam2 < 50)
+            {
+                szelsebesseg = random.Next(250,399);
+            }
+            else if  (legvaloszinubbSzam2 > 49 && legvaloszinubbSzam2 < 76)
+            {
+                szelsebesseg = random.Next(130,200);
+            }
+            else if (legvaloszinubbSzam2 > 75 &&    legvaloszinubbSzam2 < 92)
+            {
+                szelsebesseg = random.Next(75,110);
+            }
+            else if (legvaloszinubbSzam2 > 91 && legvaloszinubbSzam2 < 100)
+            {
+                szelsebesseg = random.Next(10,50);
+            }
+
             return szelsebesseg / 10.0;
+
         }
-     
+
+        public override string ToString()
+        {
+            return $"\tÁtlagos Szélsebesség:{this.szelsebesseg} km/h \n \t\tSzélirány: {this.szelirany}";
+        }
     }
 }
