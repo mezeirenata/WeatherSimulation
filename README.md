@@ -1,27 +1,29 @@
 ## Időjárás szimuláció
-  A program célja, hogy régiónként a napi időjárás jelentést szimulálja.  
+  A program célja, hogy a napi időjárásjelentést megfelelően mutassa be, különböző funkciók kereteiben.  
 
 ### Menü
-  - mai nap statisztikái
-  - következő nap
   - Kilépés
+  - mai nap statisztikái
+  - Mezgőgazdaság - események
+  - Közlekedés - események
+  - Átlépés a következő napra
+  - Beállítások
 
 ### Osztályok
-  #### Főosztály (Régió)
-  -  csapadék randomizálása (forma, mennyiség) csapadék típusú listából
-  -  átlaghőmérsékletek a napra, évszak szerint
-  -  időjárás típus (string listából randomizál)
-  -  szél (lista, abból randomizál)
-  -  Régió neve
-  -  Természeti katasztrófák típusú lista, amiből randomizálhat
+  ### Főosztály (Régió)
+  -  név
+  -  időjárás
+  -  szél
+  -  átlaghőmérséklet
   -  páratartalom
-  -  naplemente, napfelkete (óra, évszak szerint random tartományban)
+  -  naplemente, napfelkelte
+  -  páratartalom
 
-  - Közlekedés, Mezőgazdaság
 
-  #### Csapadék(neve, mennyiség, ideje(-tól, -ig))
-  #### Természeti katasztrófák (név, szöveg, bejelentések régió szerint) (enum bejelentéseknek)
-  #### Szél (iránya, sebessége)
+  ### Csapadék
+  ### Természeti katasztrófák 
+  ### Szél 
+  (Enum) események
   
 
 ### Feladat részletes elképzelése: drawio-n
