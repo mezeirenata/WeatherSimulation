@@ -86,9 +86,12 @@ namespace Weather_Simulation
 
         }
 
+
+
+
         public override string ToString()
         {
-            return $"\tÁtlagos Szélsebesség:{this.szelsebesseg} km/h \n \t\tSzélirány: {this.szelirany}";
+            return $"\t   Átlagos Szélsebesség:\t{this.szelsebesseg} km/h \n\t   Szélirány: \t\t\t{this.szelirany}";
         }
     }
 }
