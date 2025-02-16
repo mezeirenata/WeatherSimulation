@@ -12,12 +12,25 @@ namespace Weather_Simulation
         public DateTime datum { get; private set; }
         private int honap = 0;
         
+        private string Tipus { get; set; }
         public Szel szel { get; private set; }
 
+        public Csapadek csapadek { get;private set; }
+        public int paratartalom { get; private set; }
         private int legvaloszinubbSzam2 { get; set; }
         private int legvaloszinubbSzam { get; set; }
 
         public double homerseklet { get;private set; }
+
+        private List<string> Tipusok = new List<string>()
+        {
+            "szeles",
+            "felhős",
+            "napos",
+            "esős",
+            "viharos",
+            "havazás"
+        };
 
         private List<string> LehetsegesNevek = new List<string>() {
             "Észak-Magyarország", 
@@ -52,9 +65,28 @@ namespace Weather_Simulation
             legvaloszinubbSzam2 = mostLikelySzam2;
             szel = new Szel(legvaloszinubbSzam,legvaloszinubbSzam2);
             homerseklet = randomHomerseklet();
-
+            paratartalom = randomParatartalom();
         }
 
+
+        public string Tipusbeallitas()
+        {
+            string tipus = "";
+            
+            Random random = new Random();
+            int szam = random.Next(2);
+            switch (szam)
+            {
+                case 0:
+                    tipus = "napos";
+                    break;
+                case 1:
+                    tipus = "szeles";
+                    break;
+            }
+            Tipus = tipus;
+            return tipus;
+        }
         private double randomHomerseklet()
         {
             Random random = new Random();
@@ -64,6 +96,7 @@ namespace Weather_Simulation
                     if (random.Next(5) == 0)
                     {
                         homerseklet = random.Next(100, 130);
+
                     }
                     else
                     {
@@ -144,7 +177,51 @@ namespace Weather_Simulation
             return homerseklet / 10.0;
         }
  
-        
+
+        private int randomParatartalom()
+        {
+            Random random = new Random();
+            switch (honap)
+            {
+                case 1:
+                    paratartalom = random.Next(30, 70);
+                    break;
+                case 2:
+                    paratartalom = random.Next(30, 75);
+                    break;
+                case 3:
+                    paratartalom = random.Next(30, 80);
+                    break;
+                case 4:
+                    paratartalom = random.Next(40,80);
+                    break;
+                case 5:
+                    paratartalom = random.Next(40, 80);
+                    break;
+                case 6:
+                    paratartalom = random.Next(40,85);
+                    break;
+                case 7:
+                    paratartalom = random.Next(40, 85);
+                    break;
+                case 8:
+                    paratartalom = random.Next(40, 85);
+                    break;
+                case 9:
+                    paratartalom = random.Next(40, 80);
+                    break;
+                case 10:
+                    paratartalom = random.Next(30, 80);
+                    break;
+                case 11:
+                    paratartalom = random.Next(30, 50);
+                    break;
+                case 12:
+                    paratartalom = random.Next(30, 50);
+                    break;
+            }
+            return paratartalom;
+        }  
         public void UjLegvaloszinubbSzelirany(int szam)
         {
             if (szel.Szeliranyok.Count - 1 < szam || szam < 0)
@@ -178,12 +255,13 @@ namespace Weather_Simulation
 
             szel = new Szel(legvaloszinubbSzam, legvaloszinubbSzam2);
             homerseklet = randomHomerseklet();
+            paratartalom = randomParatartalom();
         }
 
         public override string ToString()
         {
             string elvalaszto = "──────────────────────────────────────────────────────";
-            return $"         ==    Régió - {this.nev}    ==\n{elvalaszto}\n    Szél : \n{this.szel} \n\n    Napi Átlaghőmérséklet : \t\t{this.homerseklet} °C";
+            return $"         ==    Régió - {this.nev}    ==\n{elvalaszto}\n    Típus: \t\t\t {Tipus}\n    Szél : \n{this.szel} \n\n    Napi Átlaghőmérséklet : \t\t{this.homerseklet} °C\n\n    Páratartalom : \t\t\t{this.paratartalom} %";
         }
     }
 }

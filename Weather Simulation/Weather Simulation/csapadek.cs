@@ -10,9 +10,9 @@ namespace Weather_Simulation
     internal class Csapadek
     {
 
-        private double mennyiseg { get; set; }
+        public double mennyiseg { get; private set; }
         public string Csapadekforma { get; private set; }
-        private bool Hoformaju { get; set; }
+        public bool Hoformaju { get;private set; }
 
         private string[] SpecialChars = new string[] {
         "~",
@@ -46,9 +46,13 @@ namespace Weather_Simulation
         "?",
         "/",
         };
-        public Csapadek(string Forma, bool Hoformaju) {
+
+        private int sorszam { get; set; }
+        public Csapadek(string Forma, bool _Hoformaju, int Sorszam, double Mennyiseg) {
             Csapadekforma = CsapadekFeltoltese(Forma);
-            mennyiseg = 0.0;
+            mennyiseg = Mennyiseg;
+            sorszam = Sorszam;
+            Hoformaju = _Hoformaju;
         }
 
         public string CsapadekFeltoltese(string forma)
@@ -62,6 +66,11 @@ namespace Weather_Simulation
             {
                 return forma;
             }
+
+        }
+        public void _sorszam(int Sorszam)
+        {
+            sorszam = Sorszam;
 
         }
 
@@ -80,7 +89,9 @@ namespace Weather_Simulation
                 }
                 else
                 {
-                    mennyiseg = random.Next(minMennyiseg, maxMennyiseg + 1) / 100.0;
+                    if (Csapadekforma == "Ónos eső")
+
+                    mennyiseg = (random.Next(minMennyiseg, maxMennyiseg + 1) + 50) / 100.0;
                 }
             }
               return mennyiseg;
@@ -96,8 +107,16 @@ namespace Weather_Simulation
             }
             return false;
         }
-    
-    
-    
+
+
+        public override string ToString()
+        {
+            string csapadeknev = Csapadekforma;
+            if (mennyiseg  == 0.0)
+            {
+                csapadeknev = "Csapadék";
+            }
+            return $"\n  \t{csapadeknev} :\t\t\t{this.mennyiseg} mm";
+        }
     }
 }
