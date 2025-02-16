@@ -12,6 +12,7 @@ namespace Weather_Simulation
 
         private double mennyiseg { get; set; }
         public string Csapadekforma { get; private set; }
+        private bool Hoformaju { get; set; }
 
         private string[] SpecialChars = new string[] {
         "~",
@@ -45,7 +46,7 @@ namespace Weather_Simulation
         "?",
         "/",
         };
-        public Csapadek(string Forma) {
+        public Csapadek(string Forma, bool Hoformaju) {
             Csapadekforma = CsapadekFeltoltese(Forma);
             mennyiseg = 0.0;
         }
@@ -73,12 +74,14 @@ namespace Weather_Simulation
             else
             {
                 Random random = new Random();
-                mennyiseg = random.Next(minMennyiseg,maxMennyiseg+1) / 100.0;
-
-            }
-            if (Csapadekforma.Contains("hó") || Csapadekforma.Contains("havazás"))
-            {
-                mennyiseg /= 10.0;
+                if (Hoformaju)
+                {
+                    mennyiseg = random.Next(minMennyiseg, maxMennyiseg + 1) / 10.0;
+                }
+                else
+                {
+                    mennyiseg = random.Next(minMennyiseg, maxMennyiseg + 1) / 100.0;
+                }
             }
               return mennyiseg;
 
