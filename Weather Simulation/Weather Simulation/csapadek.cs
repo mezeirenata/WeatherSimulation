@@ -91,7 +91,7 @@ namespace Weather_Simulation
                 {
                     if (Csapadekforma == "Ónos eső")
 
-                    mennyiseg = (random.Next(minMennyiseg, maxMennyiseg + 1) + 50) / 100.0;
+                    mennyiseg = (random.Next(minMennyiseg, maxMennyiseg + 1) + 100) / 100.0;
                 }
             }
               return mennyiseg;
@@ -116,7 +116,7 @@ namespace Weather_Simulation
             {
                 csapadeknev = "Csapadék";
             }
-            return $"\n  \t{csapadeknev} :\t\t\t{this.mennyiseg} mm";
+            return $"\n    {csapadeknev} :\t\t\t\t{this.mennyiseg} mm";
         }
     }
 }

@@ -15,10 +15,13 @@ namespace Weather_Simulation
         private string Tipus { get; set; }
         public Szel szel { get; private set; }
 
+        private int evszak { get; set; }
         public Csapadek csapadek { get;private set; }
         public int paratartalom { get; private set; }
         private int legvaloszinubbSzam2 { get; set; }
         private int legvaloszinubbSzam { get; set; }
+
+        public Katasztrofa katasztrofa { get;private set; }
 
         public double homerseklet { get;private set; }
 
@@ -42,7 +45,6 @@ namespace Weather_Simulation
             "Nyugat-Dunántúl",
             "Dél-Dunántúl"
         };
-        
 
 
         public Regio(string Nev, DateTime Datum, int mostLikelySzelIndex, int mostLikelySzam2)
@@ -60,14 +62,55 @@ namespace Weather_Simulation
             {
                 throw new Exception("Nem lehetséges régiónév!");
             }
+
+
             honap = Datum.Month;
+
             legvaloszinubbSzam = mostLikelySzelIndex;
             legvaloszinubbSzam2 = mostLikelySzam2;
+
             szel = new Szel(legvaloszinubbSzam,legvaloszinubbSzam2);
             homerseklet = randomHomerseklet();
             paratartalom = randomParatartalom();
+       
+
         }
 
+
+
+        public Katasztrofa randomKatasztrofa(List<Katasztrofa> katasztrofak,Csapadek csapadek, int randomszam)
+        {
+            int evszak = 0;
+            if (datum.Month < 3 || datum.Month == 12) {
+                evszak = 1;
+            }
+            else if(datum.Month > 2 && datum.Month < 6)
+            {
+                evszak = 2;
+            }
+            else if(datum.Month > 5 && datum.Month < 9)
+            {
+                evszak = 3;
+            }
+            else
+            {
+                evszak = 4;
+            }
+
+
+            Random random = new Random();
+            int szam = random.Next(0, 10000);
+            if (szam < 5 && (katasztrofak[randomszam].eselyesevszak == evszak || katasztrofak[randomszam].eselyesevszak == 5))
+            {
+                return katasztrofak[randomszam];
+            }
+            else
+            {
+                return new Katasztrofa("Nem volt",5,0);
+            }
+
+            
+        }
 
         public string Tipusbeallitas()
         {

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -7,6 +9,11 @@ namespace Weather_Simulation
 {
  
         /// TODO:
+        /// NE AZ EGÉSZ ORSZÁGON LEGYEN KATASZTRÓFA
+        /// 
+        /// 
+        /// 
+        /// 
         /// -Beállítások 6
         /// katasztrófák 5
         /// Típus 4
@@ -42,19 +49,28 @@ namespace Weather_Simulation
         };
         static List<Regio> Regiok = new List<Regio>();
         static List<Csapadek> Csapadekok = new List<Csapadek>();
+        static List<Katasztrofa> Katasztrofak = new List<Katasztrofa>();
 
         static List<Csapadek> GeneraltCsapadekok = new List<Csapadek>();
             static void Main(string[] args)
         {
             DateTime dateofDay = DateTime.Now;
             int honap = dateofDay.Month;
+            ///////
             CsapadekFeltoltes(dateofDay);
+            KatasztrofaFeltoltes();
             Regiogeneralas(dateofDay);
+            ///////
             Random random = new Random();
             Csapadek csapadek = new Csapadek("Hóesés", true,1, 0.0);
-            int randomIndex = random.Next(0, Csapadekok.Count);
+            Katasztrofa katasztrofa = new Katasztrofa("-",1,0);
+            ///////
+            int randomIndex = random.Next(0,Csapadekok.Count);
             int choice = 1;
             int vegigmegy = 0;
+            ///////
+/// TODO:
+/// NE AZ EGÉSZ ORSZÁGON LEGYEN KATASZTRÓFA
             while (choice > 0)
             {
                 choice = Menü(menu, dateofDay, "Menü");
@@ -84,14 +100,17 @@ namespace Weather_Simulation
                                 {
                                     if (vegigmegy == 0)
                                     {
+                                        int KatasztrofaIndex = random.Next(0,Katasztrofak.Count);
                                         for (int j= 0; j < Regiok.Count; j++)
                                         {
                                             csapadek = Csapadekgeneralas(dateofDay.Month, randomIndex, j);
                                             GeneraltCsapadekok.Add(csapadek);
+                                            katasztrofa = Regiok[j].randomKatasztrofa(Katasztrofak,csapadek, KatasztrofaIndex);
+
                       
                                         }
                                     }
-                                    RegioKiir(regiochoice, dateofDay, randomIndex, GeneraltCsapadekok);
+                                    RegioKiir(regiochoice, dateofDay, randomIndex, GeneraltCsapadekok, katasztrofa);
                             
                                 }
                                 catch (Exception e)
@@ -245,6 +264,29 @@ namespace Weather_Simulation
             }
         }
 
+
+
+        static void KatasztrofaFeltoltes()
+        {
+            try
+            {
+          
+                Katasztrofa katasztrofa = new Katasztrofa("Földrengés",5, 115);
+                Katasztrofak.Add(katasztrofa);
+                katasztrofa = new Katasztrofa("Árvíz",5, 15);
+                Katasztrofak.Add(katasztrofa);
+                katasztrofa = new Katasztrofa("Erdőtűz",3, 5);
+                Katasztrofak.Add(katasztrofa);
+
+            }
+            catch(Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+
         static Csapadek Csapadekgeneralas(int honap, int csapadekIndex, int sorszam)
         {
             string evszak = "";
@@ -391,8 +433,6 @@ namespace Weather_Simulation
                 Csapadekok.Add(csapadek);
                 csapadek = new Csapadek("Eső",false,1,0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Hódara",true, 1, 0.0);
-                Csapadekok.Add(csapadek);
                 csapadek = new Csapadek("Jégdara", false, 1, 0.0);
                 Csapadekok.Add(csapadek);
                 csapadek = new Csapadek("Jégeső", false, 1, 0.0);
@@ -509,7 +549,7 @@ namespace Weather_Simulation
 
         }
 
-        static void RegioKiir(int regiochoice,DateTime dateofDay,int indexofCsapadek, List<Csapadek> generaltCsapadekok)
+        static void RegioKiir(int regiochoice,DateTime dateofDay,int indexofCsapadek, List<Csapadek> generaltCsapadekok, Katasztrofa katasztrofa)
         {
             if (regiochoice == Regiok.Count)
             {
@@ -529,6 +569,7 @@ namespace Weather_Simulation
                 Console.WriteLine(
                     generaltCsapadekok[regiochoice] 
                     );
+                Console.WriteLine(katasztrofa);
                 Console.ReadLine();
                 return;
             }
