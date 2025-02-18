@@ -12,9 +12,9 @@ namespace Weather_Simulation
         public DateTime datum { get; private set; }
         private int honap = 0;
         
-        private string Tipus { get; set; }
         public Szel szel { get; private set; }
 
+        private string Tipus { get; set; }
         private int evszak { get; set; }
         public Csapadek csapadek { get;private set; }
         public int paratartalom { get; private set; }
@@ -78,7 +78,7 @@ namespace Weather_Simulation
 
 
 
-        public Katasztrofa randomKatasztrofa(List<Katasztrofa> katasztrofak,Csapadek csapadek, int randomszam)
+        public Katasztrofa randomKatasztrofa(List<Katasztrofa> katasztrofak, int randomszam)
         {
             int evszak = 0;
             if (datum.Month < 3 || datum.Month == 12) {
@@ -100,32 +100,46 @@ namespace Weather_Simulation
 
             Random random = new Random();
             int szam = random.Next(0, 10000);
-            if (szam < 5 && (katasztrofak[randomszam].eselyesevszak == evszak || katasztrofak[randomszam].eselyesevszak == 5))
+            int esely = Convert.ToInt32(katasztrofak[randomszam].Esely * 100.0 );
+            if (szam <= esely && (katasztrofak[randomszam].eselyesevszak == evszak || katasztrofak[randomszam].eselyesevszak == 5))
             {
                 return katasztrofak[randomszam];
             }
             else
             {
-                return new Katasztrofa("Nem volt",5,0);
+                return new Katasztrofa("Nem volt",5,0, 0);
             }
 
             
         }
 
-        public string Tipusbeallitas()
+        public string Tipusbeallitas(Csapadek csapadek)
         {
             string tipus = "";
-            
             Random random = new Random();
-            int szam = random.Next(2);
-            switch (szam)
+            
+            if (csapadek.mennyiseg == 0.0)
             {
-                case 0:
-                    tipus = "napos";
-                    break;
-                case 1:
-                    tipus = "szeles";
-                    break;
+                if (szel.szelsebesseg >= 36)
+                {
+                    tipus = "Szeles";
+                }
+                else if (random.Next(1) == 0)
+                {
+                    tipus = "Felhős";
+                }
+                else
+                {
+                    tipus = "Napos";
+                }
+            }
+            else if(csapadek.Hoformaju)
+            {
+                tipus = "Havazás";
+            }
+            else
+            {
+                tipus = "Esős";
             }
             Tipus = tipus;
             return tipus;
@@ -304,7 +318,7 @@ namespace Weather_Simulation
         public override string ToString()
         {
             string elvalaszto = "──────────────────────────────────────────────────────";
-            return $"         ==    Régió - {this.nev}    ==\n{elvalaszto}\n    Típus: \t\t\t {Tipus}\n    Szél : \n{this.szel} \n\n    Napi Átlaghőmérséklet : \t\t{this.homerseklet} °C\n\n    Páratartalom : \t\t\t{this.paratartalom} %";
+            return $"         ==    Régió - {this.nev}    ==\n{elvalaszto}\n\n    Típus: \t\t\t\t{Tipus}\n\n    Szél : \n{this.szel} \n\n    Napi Átlaghőmérséklet : \t\t{this.homerseklet} °C\n\n    Páratartalom : \t\t\t{this.paratartalom} %";
         }
     }
 }

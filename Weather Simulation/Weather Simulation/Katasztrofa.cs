@@ -17,20 +17,90 @@ namespace Weather_Simulation
         public int eselyesevszak { get; private set; }
 
         public string kategoria { get; private set; }   
-
-        public Katasztrofa(string Nev, int Eselyesevszak, int maximumHalalesetek) {
-            nev = Nev;
-            if (Eselyesevszak > 5 || Eselyesevszak < 1)
+        public double Esely { get; set; }
+        private List<string> SpecialChars = new List<string>(){
+        "~",
+        "!",
+        "@",
+        "#",
+        "$",
+        "%",
+        "^",
+        "&",
+        "*",
+        "_",
+        "-",
+        "+",
+        "=",
+        "`",
+        "|",
+        "(",
+        ")",
+        "{",
+        "}",
+        "[",
+        "]",
+        ":",
+        ";",
+        "'",
+        "<",
+        ">",
+        ",",
+        ".",
+        "?",
+        "/",
+        };
+        public Katasztrofa(string Nev, int Eselyesevszak, int maximumHalalesetek, double esely)
+        {
+            for (int i = 0; i < Nev.Length; i++)
             {
-                throw new Exception($"Az Eselyesevszak változó csak 1 és 5 között vár értéket!\n (1-4 évszakok, 5: minden évszak)  ");
+                if (SpecialChars.Contains(Convert.ToString(Nev[i])))
+                {
+                    throw new Exception($"\n   A katasztrófa neve nem tartalmazhat speciális karaktereket!");
+                }
             }
-            else
-            {
-                eselyesevszak = Eselyesevszak;
-            }
+                if (nev == "")
+                {
+                    throw new Exception($"\n   A név mező nem lehet üres!");
+                }
 
-            kategoria = randomKategoria();
-            aldozatok = randomAldozat(maximumHalalesetek);
+            
+                else
+                {
+                    nev = Nev;
+
+                }
+                if (Eselyesevszak > 5 || Eselyesevszak < 1)
+                {
+                    throw new Exception($"\n   Az Eselyesevszak változó csak 1 és 5 között vár értéket!\n   A megadott érték: {Eselyesevszak}");
+                }
+                if (Convert.ToString(Eselyesevszak) == "")
+                {
+                    throw new Exception($"\n   Az esélyes évszak mező nem lehet üres!");
+                }
+                else
+                {
+                    eselyesevszak = Eselyesevszak;
+                }
+                if (esely < 0)
+                {
+                    throw new Exception("\n   Egy katasztrófa történésének esélye nem lehet 0-nál kevesebb %!");
+                }
+                if (esely > 100)
+                {
+                    throw new Exception("\n   Egy katasztrófa történésének esélye nem lehet 100-nál több %!");
+                }
+                else
+                {
+                    Esely = esely;
+
+                }
+                if (maximumHalalesetek < 0)
+                {
+                    throw new Exception("\n   A maximum halálesetek száma nem lehet kevesebb, mint 0!");
+                }
+                kategoria = randomKategoria();
+                aldozatok = randomAldozat(maximumHalalesetek);
         }
 
 
@@ -86,7 +156,7 @@ namespace Weather_Simulation
         
                 return $"\n{elvalaszto}\n    Katasztrófa: \tNem dokumentáltak katasztrófát";
             }
-            return $"\n{elvalaszto}\n     Katasztrófa:\t\t\t{nev} \n    \t    Súly: \t\t\t{kategoria}\n Áldozatokszáma: \t\t\t{aldozatok}";
+            return $"\n{elvalaszto}\n     Katasztrófa:\t\t\t{nev} \n    \t    Súly: \t\t\t{kategoria}\n  Áldozatokszáma: \t\t\t{aldozatok}";
         }
     }
 }

@@ -8,30 +8,20 @@ using System.Xml.Serialization;
 namespace Weather_Simulation
 {
  
-        /// TODO:
-        /// NE AZ EGÉSZ ORSZÁGON LEGYEN KATASZTRÓFA
-        /// 
-        /// 
-        /// 
-        /// 
-        /// -Beállítások 6
-        /// katasztrófák 5
-        /// Típus 4
-        /// Naplemente, napfelkelte  3
-        /// mezőgazd 7
-        /// közleked 8
-        /// 
-        /// funkciók függvények 9  -> pl hőmérséklet szélsőértékek megadása  
+
+
+        /// mezőgazd 3
+        /// közleked 4
+        /// funkciók függvények   -> pl hőmérséklet szélsőértékek megadása  
         ///                           pl új csapadék felvétele 
         ///                           pl régió felvétele
-        ///                             új típus felvétele
+                   
     internal class Program
     {
         static string[] menu = new string[] {
         "Kilépés",
         "Napi időjárás jelentés", 
         "Közlekedés - események", 
-        "Mezőgazdaság - események",
         "Átlépés a következő napra",
         "Beállítások",/// ->> katasztrófa esemény felvétele
                       /// mezőgazdasági esemény felvétele   legvalószínűbb hónap, esélyek, milyen időjárási tényezőktől
@@ -42,9 +32,8 @@ namespace Weather_Simulation
         static string[] beallitasok = new string[]
         {
             "Katasztrófa esemény felvétele",
-            "Mezőgazdasági esemény felvétele",
-            "Közlekedési esemény felvétele",
             "Dátum beállítása",
+            "Régió felvétele",
             "Vissza"
         };
         static List<Regio> Regiok = new List<Regio>();
@@ -63,19 +52,20 @@ namespace Weather_Simulation
             ///////
             Random random = new Random();
             Csapadek csapadek = new Csapadek("Hóesés", true,1, 0.0);
-            Katasztrofa katasztrofa = new Katasztrofa("-",1,0);
+            Katasztrofa katasztrofa = new Katasztrofa("default",1,0, 0.0);
             ///////
+            string elvalaszto = "──────────────────────────────────────────────────────";
             int randomIndex = random.Next(0,Csapadekok.Count);
             int choice = 1;
             int vegigmegy = 0;
+            int streak = 0;
             ///////
-/// TODO:
-/// NE AZ EGÉSZ ORSZÁGON LEGYEN KATASZTRÓFA
+
             while (choice > 0)
             {
                 choice = Menü(menu, dateofDay, "Menü");
                 switch (choice) { 
-                /// !!!!!!! Try block
+
                     default:
                         Console.Clear();
                         break;
@@ -105,20 +95,44 @@ namespace Weather_Simulation
                                         {
                                             csapadek = Csapadekgeneralas(dateofDay.Month, randomIndex, j);
                                             GeneraltCsapadekok.Add(csapadek);
-                                            katasztrofa = Regiok[j].randomKatasztrofa(Katasztrofak,csapadek, KatasztrofaIndex);
+                                            Regiok[j].Tipusbeallitas(csapadek);
+                                            if (j == random.Next(0, Regiok.Count))
+                                            {
+                                                katasztrofa = Regiok[j].randomKatasztrofa(Katasztrofak, KatasztrofaIndex);
+                                                if (katasztrofa.nev.ToLower() == "árvíz")
+                                                {
+                                                    streak++;
+                                                }
+                                                if (streak > 0 && streak < random.Next(5))
+                                                {
+                                                    int indexfind = 0;
+                                                    for (int u = 0; u < Katasztrofak.Count; u++)
+                                                    {
+                                                        if (Katasztrofak[u].nev == "Árvíz")
+                                                        {
+                                                            indexfind = u;
 
-                      
+                                                        }
+                                                    }
+                                                    katasztrofa = Regiok[j].randomKatasztrofa(Katasztrofak, indexfind);
+
+                                                    streak++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                katasztrofa = new Katasztrofa("Nem volt", 5, 0, 0.0);
+                                            }
                                         }
                                     }
                                     RegioKiir(regiochoice, dateofDay, randomIndex, GeneraltCsapadekok, katasztrofa);
-                            
                                 }
                                 catch (Exception e)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine(e.Message);
                                     Console.ForegroundColor = ConsoleColor.White;
-                                    Console.ReadLine();
+                                    Console.ReadKey(true);
                                 }
                                 vegigmegy++;
                                 break;
@@ -131,28 +145,18 @@ namespace Weather_Simulation
                         Header(dateofDay, "Közlekedés - események");
                         vegigmegy++;
                         /// régió kilistázás
-                        Console.ReadLine();
+                        Console.ReadKey(true);
                         break;
-                    case 3: /// Mezőgazdaság
-                        Console.Clear();
-                        Header(dateofDay, "Mezőgazdaság - események");
-                        /// régió kilistázás NEM kell -> nem történik olyan sok esemény, viszont helyszínt kiírni
-                        Console.ReadLine();
-                        vegigmegy++;
-                        break;
-                    case 4:
+    
+                    case 3:
+                        GeneraltCsapadekok.Clear();
+                        randomIndex = random.Next(0, Csapadekok.Count);
                         dateofDay = dateofDay.AddDays(1);
                         Generalas(dateofDay);
                         honap = dateofDay.Month;
-                        GeneraltCsapadekok.Clear();
                         vegigmegy = 0;
-                        randomIndex = random.Next(0, Csapadekok.Count);
-                        for (int i = 0; i < Regiok.Count; i++)
-                        {
-                            Regiok[i].Tipusbeallitas();
-                        }
                         break;
-                    case 5:
+                    case 4:
                         vegigmegy++;
                         Header(dateofDay, "Beállítások");
                         int choice_setting = 1;
@@ -162,18 +166,76 @@ namespace Weather_Simulation
                             switch (choice_setting)
                             {
                                 case 0: /// Katasztrófa esemény felvétele
+                                    int kesz = 0;
+                                    while (kesz == 0)
+                                    {
+                                    try
+                                    {
+                                    
                                     Console.Clear();
-                                    Console.ReadLine();
+                                    Header(dateofDay,"Katasztrófa felvétele");
+                                    Console.WriteLine(elvalaszto);
+                                    Console.Write("   Katasztrófa esemény neve:\t\t");
+                                    string nev = Console.ReadLine();
+                                    if(nev == "")
+                                    {
+                                        throw new Exception("   Ne hagyja üresen!");
+                                    }
+                                       
+                                    Console.Write("   Esélyes évszakok:\n\t   1 - Tél\n\t   2 - Tavasz\n\t   3 - Nyár\n\t   4 - Ősz\n\t   5 - Összes évszak\t\t");
+                                    string evszak_ = Console.ReadLine();
+                                            int evszak = 0;
+                                            if (evszak_ == "")
+                                            {
+                                                throw new Exception("   Ne hagyja üresen!");
+                                            }
+                                            else
+                                            {
+                                                evszak = Convert.ToInt32(evszak_);
+                                            }
+                                    
+                                    Console.Write("   Maximum halálesetek száma:\t\t");
+                                    string halalesetek_ = Console.ReadLine();
+                                            int halalesetek = 0;
+                                            if (halalesetek_ == "")
+                                            {
+                                                throw new Exception("   Ne hagyja üresen!");
+                                            }
+                                            else
+                                            {
+                                                halalesetek = Convert.ToInt32(halalesetek_);
+                                            }
+                                    Console.Write("   Történés esélyei (%):\t\t");
+                                    string esely_ = Console.ReadLine();
+                                            double esely = 0.0;    
+                                            if (esely_ == "")
+                                            {
+                                                throw new Exception("   Ne hagyja üresen!");
+                                            }
+                                            else
+                                            {
+                                                esely = Convert.ToDouble(esely_);
+                                            }
+                                    Katasztrofa katasztrofa_ = new Katasztrofa(nev, evszak,halalesetek,esely);
+                                    Katasztrofak.Add(katasztrofa);
+
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("\n   Sikeres katasztrófa feljegyzés!");
+                                    Console.ReadKey(true);
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                    kesz = 1;
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine(e.Message);
+                                        Console.ReadKey(true);
+                                        Console.ForegroundColor= ConsoleColor.White;
+                                    }
+
+                                    }
                                     break;
-                                case 1: /// Mezőgazdasági esemény felvétele
-                                    Console.Clear();
-                                    Console.ReadLine();
-                                    break;
-                                case 2: /// Közlekedés esemény felvétele
-                                    Console.Clear();
-                                    Console.ReadLine();
-                                    break;
-                                case 3: /// Dátum beállítása
+                                case 1: /// Dátum beállítása
                                     bool Beallitva = false;
                                     while (Beallitva == false)
                                     {
@@ -184,6 +246,7 @@ namespace Weather_Simulation
                                             int honap_ellenorzott = 0;
                                             int nap_ellenorzott = 0;
 
+                                            Console.WriteLine(elvalaszto);
                                             Console.Write("   Év:\t\t");
                                             string _ev = Console.ReadLine();
                                             if (_ev.Length != 4)
@@ -235,7 +298,7 @@ namespace Weather_Simulation
                                             Console.WriteLine($"   Új dátum beállítva: {dateofDay} !");
                                             Console.ForegroundColor = ConsoleColor.White;
 
-                                            Console.ReadLine();
+                                            Console.ReadKey(true);
                                             break;
                                         }
                                         catch (Exception e)
@@ -245,7 +308,7 @@ namespace Weather_Simulation
                                             Console.WriteLine("   " + e.Message);
                                             Console.ForegroundColor = ConsoleColor.White;
 
-                                            Console.ReadLine();
+                                            Console.ReadKey(true);
                                             Console.Clear();
                                         }
 
@@ -253,6 +316,11 @@ namespace Weather_Simulation
                                     break;
                                 default: /// Vissza
                                     choice_setting = -1;
+                                    break;
+                                case 2:
+                                    Console.Clear();
+                                    Header(dateofDay, "Régió felvétele");
+                                    Console.ReadKey(true);
                                     break;
                              
                             }
@@ -271,24 +339,25 @@ namespace Weather_Simulation
             try
             {
           
-                Katasztrofa katasztrofa = new Katasztrofa("Földrengés",5, 115);
+                Katasztrofa katasztrofa = new Katasztrofa("Földrengés",5, 115,1.25);
                 Katasztrofak.Add(katasztrofa);
-                katasztrofa = new Katasztrofa("Árvíz",5, 15);
+                katasztrofa = new Katasztrofa("Árvíz",5, 15,5.25);
                 Katasztrofak.Add(katasztrofa);
-                katasztrofa = new Katasztrofa("Erdőtűz",3, 5);
+                katasztrofa = new Katasztrofa("Erdőtűz",3, 5,15.25);
                 Katasztrofak.Add(katasztrofa);
 
             }
             catch(Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine();
+                Console.WriteLine(e.Message);
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
         static Csapadek Csapadekgeneralas(int honap, int csapadekIndex, int sorszam)
         {
+
             string evszak = "";
             int csapadekEselyek = 0;
             if (honap == 12 || honap >= 1 && honap <= 2)
@@ -395,9 +464,11 @@ namespace Weather_Simulation
 
             }
 
-            string nev = Csapadekok[csapadekIndex].Csapadekforma;
-            bool havas = Csapadekok[csapadekIndex].Hoformaju;
+         
+            string  nev = Csapadekok[csapadekIndex].Csapadekforma;
+            bool  havas = Csapadekok[csapadekIndex].Hoformaju;
 
+               
             Csapadek csapadek = new Csapadek(nev, havas, sorszam, mennyiseg);
 
             return csapadek;
@@ -407,7 +478,7 @@ namespace Weather_Simulation
         {
             int honap = dateofDay.Month;
             string evszak = "";
-            if (honap == 12 || honap >= 1 && honap <= 2)
+            if (honap == 12 ||( honap >= 1 && honap <= 2))
             {
                 evszak = "tél";
             }
@@ -431,13 +502,13 @@ namespace Weather_Simulation
                 Csapadekok.Clear();
                 Csapadek csapadek = new Csapadek("Havazás",true,1,0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Eső",false,1,0.0);
+                csapadek = new Csapadek("Eső",false,2,0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Jégdara", false, 1, 0.0);
+                csapadek = new Csapadek("Jégdara", false, 3, 0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Jégeső", false, 1, 0.0);
+                csapadek = new Csapadek("Jégeső", false, 4, 0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Ónos eső",false, 1, 0.0);
+                csapadek = new Csapadek("Ónos eső",false, 5, 0.0);
                 Csapadekok.Add(csapadek);
                 } 
                 if (evszak == "tavasz")
@@ -445,13 +516,13 @@ namespace Weather_Simulation
                 Csapadekok.Clear();
                 Csapadek csapadek = new Csapadek("Szitálás",false, 1, 0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Eső",false, 1, 0.0);
+                csapadek = new Csapadek("Eső",false, 2, 0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Záporos csapadék", false, 1, 0.0);
+                csapadek = new Csapadek("Záporos csapadék", false, 3, 0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Jégeső", false, 1, 0.0);
+                csapadek = new Csapadek("Jégeső", false, 4, 0.0);
                 Csapadekok.Add(csapadek);
-                csapadek = new Csapadek("Ónos eső", false, 1, 0.0);
+                csapadek = new Csapadek("Ónos eső", false, 5, 0.0);
                 Csapadekok.Add(csapadek);
                 }
                 if (evszak == "nyár")
@@ -459,11 +530,11 @@ namespace Weather_Simulation
                     Csapadekok.Clear();
                     Csapadek csapadek = new Csapadek("Szitálás", false, 1, 0.0);
                     Csapadekok.Add(csapadek);
-                    csapadek = new Csapadek("Eső", false, 1, 0.0);
+                    csapadek = new Csapadek("Eső", false, 2, 0.0);
                     Csapadekok.Add(csapadek);
-                    csapadek = new Csapadek("Záporos csapadék", false, 1, 0.0);
+                    csapadek = new Csapadek("Záporos csapadék", false, 3, 0.0);
                     Csapadekok.Add(csapadek);
-                    csapadek = new Csapadek("Ónos eső", false, 1, 0.0);
+                    csapadek = new Csapadek("Ónos eső", false, 4, 0.0);
                     Csapadekok.Add(csapadek);
                 }
                 if (evszak == "ősz")
@@ -471,11 +542,11 @@ namespace Weather_Simulation
                     Csapadekok.Clear();
                     Csapadek csapadek = new Csapadek("Eső", false, 1, 0.0);
                     Csapadekok.Add(csapadek);
-                    csapadek = new Csapadek("Záporos csapadék", false, 1, 0.0);
+                    csapadek = new Csapadek("Záporos csapadék", false, 2, 0.0);
                     Csapadekok.Add(csapadek);
-                    csapadek = new Csapadek("Jégeső", false, 1, 0.0);
+                    csapadek = new Csapadek("Jégeső", false, 3, 0.0);
                     Csapadekok.Add(csapadek);
-                    csapadek = new Csapadek("Ónos eső", false, 1, 0.0);
+                    csapadek = new Csapadek("Ónos eső", false, 4, 0.0);
                     Csapadekok.Add(csapadek);
                 }
             }
@@ -518,10 +589,6 @@ namespace Weather_Simulation
                 Console.ForegroundColor = ConsoleColor.White;
             }
 
-            for (int i = 0; i < Regiok.Count; i++)
-            {
-                Regiok[i].Tipusbeallitas();
-            }
 
         }
       
@@ -561,16 +628,17 @@ namespace Weather_Simulation
             else
             {
             Regio regio = Regiok[regiochoice];
-
                 Console.Clear();
                 Header(dateofDay, "Régió statisztikák");
+                Console.WriteLine(regiochoice);
+                Console.WriteLine(generaltCsapadekok.Count);
 
                 Console.WriteLine(regio);
                 Console.WriteLine(
                     generaltCsapadekok[regiochoice] 
                     );
                 Console.WriteLine(katasztrofa);
-                Console.ReadLine();
+                Console.ReadKey(true);
                 return;
             }
         }
@@ -742,12 +810,7 @@ namespace Weather_Simulation
     }
 }
 
-/// órák?
-
-/// esélyek szerint csinál időjárás típust, feltölti listába
-
-/// zivatarok, természeti katasztrófák -> feltölteni évszak szerint listába, ebből randomizálhat
-///                     ->ha nem történik aznap akkor ne írjon semmit (enum??)
-///                     típus, esetleges szöveg hozzá, random jelentése
 
 
+
+//// év azért kezdődhet 0-val, mert mindenképpen 4 karakter hosszúságot kell megadni
