@@ -4,10 +4,11 @@
 ## Menü
   - Kilépés
   - mai nap statisztikái
-  - Mezgőgazdaság - események
   - Közlekedés - események
   - Átlépés a következő napra
-  - Beállítások
+  - Beállítások ->> 1, Katasztrófa felvétele
+                    2, Régió felvétele
+                    3, Dátum beállítása
 
 ## Osztályok
   ### Főosztály (Régió)
@@ -16,14 +17,12 @@
   -  szél
   -  átlaghőmérséklet
   -  páratartalom
-  -  naplemente, napfelkelte
-  -  páratartalom
 
 
   ### Csapadék
   ### Természeti katasztrófák 
   ### Szél 
-  (Enum) események
+
   
 
 ### Feladat részletes elképzelése: drawio-n
