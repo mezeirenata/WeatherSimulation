@@ -70,6 +70,7 @@ namespace Weather_Simulation
         {   //////
             DateTime dateofDay = DateTime.Now;
             int honap = dateofDay.Month;
+            /////
             Random random = new Random();
             Csapadek csapadek = new Csapadek("Hóesés", true, 1, 0.0);
             Katasztrofa katasztrofa = new Katasztrofa("default", 1, 0, 0.0);
@@ -414,9 +415,7 @@ namespace Weather_Simulation
 
                                     }
                                     break;
-                                default: /// Vissza
-                                    choice_setting = -1;
-                                    break;
+                            
                                 case 2:
                                     Console.Clear();
                                     Header(dateofDay, "Régió felvétele");
@@ -432,9 +431,11 @@ namespace Weather_Simulation
                                                 throw new Exception("   A régió név nem tartalmazhat speciális karaktereket!");
                                             }
                                         }
-
                                         Regio regio = new Regio(nev, dateofDay, mostLikely, mostLikely2);
-
+                                        Regiok.Add(regio);
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        Console.WriteLine($"   Az új régió feljegyezve {regio.nev} néven!");
+                                        Console.ForegroundColor= ConsoleColor.White;
                                     }
                                     catch (FormatException)
                                     {
@@ -454,7 +455,10 @@ namespace Weather_Simulation
                                     }
                                     Console.ReadKey(true);
                                     break;
-                             
+                                default: /// Vissza
+                                    choice_setting = -1;
+                                    break;
+
                             }
 
                         }

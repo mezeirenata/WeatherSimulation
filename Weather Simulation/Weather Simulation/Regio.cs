@@ -50,20 +50,7 @@ namespace Weather_Simulation
         public Regio(string Nev, DateTime Datum, int mostLikelySzelIndex, int mostLikelySzam2)
         {
             nev = Nev;
-            int talalt = 0;
-            for (int i = 0; i < LehetsegesNevek.Count; i++)
-            {
-                if (LehetsegesNevek[i].ToLower() == Nev.ToLower())
-                {
-                    talalt = 1;
-                }
-            }
-            if (talalt == 0)
-            {
-                throw new Exception("Nem lehetséges régiónév!");
-            }
-
-
+            
             honap = Datum.Month;
 
             legvaloszinubbSzam = mostLikelySzelIndex;
