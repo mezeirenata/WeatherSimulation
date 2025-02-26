@@ -733,7 +733,7 @@ namespace Weather_Simulation
             int mostLikely2 = random.Next(0, 99);
             for (int i = 0; i < Regiok.Count; i++)
             {
-                Regiok[i].napvaltas();
+                Regiok[i].napvaltas(dateofDay);
                 try { 
                 Regiok[i].UjLegvaloszinubbSzelirany(mostLikely);
                 Regiok[i].UjLegvaloszinubbSzam2(mostLikely2);

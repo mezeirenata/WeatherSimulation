@@ -51,6 +51,7 @@ namespace Weather_Simulation
         {
             nev = Nev;
             
+            datum = Datum; 
             honap = Datum.Month;
 
             legvaloszinubbSzam = mostLikelySzelIndex;
@@ -292,11 +293,12 @@ namespace Weather_Simulation
             }
         }
 
-        public void napvaltas()
+        public void napvaltas(DateTime Datum)
         {
-            datum.AddDays(1);
-            honap = datum.Month;
+            Datum.AddDays(1);
+            honap = Datum.Month;
 
+            datum = Datum;
             szel = new Szel(legvaloszinubbSzam, legvaloszinubbSzam2);
             homerseklet = randomHomerseklet();
             paratartalom = randomParatartalom();
